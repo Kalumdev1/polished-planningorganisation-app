@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kajatah — Mon Espace de Croissance</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C9A84C;--gold-light:#E8D5A3;--dark:#0D0D0D;--surface:#161616;
+  --surface2:#1E1E1E;--surface3:#252525;--text:#F0EDE8;--muted:#888;
+  --border:#2A2A2A;--green:#2D6A4F;--green-light:#52B788;--purple:#6B4FA0;--rose:#C97B84;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--text);min-height:100vh}
+.app{max-width:680px;margin:0 auto;padding:0 0 60px}
+
+.hero{padding:32px 20px 24px;border-bottom:0.5px solid var(--border)}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--gold);letter-spacing:.02em}
+.hero-date{font-size:11px;color:var(--muted);text-align:right;line-height:1.6}
+.hero-sub{font-size:13px;color:var(--muted);font-style:italic;font-family:'Cormorant Garamond',serif}
+.ayah{background:var(--surface);border-left:2px solid var(--gold);padding:10px 14px;margin-top:16px;border-radius:0 8px 8px 0}
+.ayah-text{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-light);font-style:italic;line-height:1.6}
+.ayah-ref{font-size:11px;color:var(--muted);margin-top:4px}
+
+.nav{display:flex;gap:4px;padding:16px 20px 0;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{flex-shrink:0;padding:7px 14px;border:0.5px solid var(--border);border-radius:20px;
+  font-size:12px;cursor:pointer;background:transparent;color:var(--muted);
+  font-family:'DM Sans',sans-serif;transition:all .2s}
+.nav-btn.active{background:var(--gold);color:var(--dark);border-color:var(--gold);font-weight:500}
+.nav-btn:hover{border-color:var(--gold);color:var(--gold-light)}
+
+.page{display:none;padding:20px}
+.page.active{display:block}
+
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);margin-bottom:14px;font-weight:600}
+
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px}
+.card-sm{background:var(--surface2);border:0.5px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px}
+
+.time-block{display:flex;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border);align-items:flex-start}
+.time-block:last-child{border-bottom:none}
+.tb-time{font-size:11px;color:var(--gold);min-width:72px;font-weight:500;padding-top:2px}
+.tb-act{font-size:13px;color:var(--text);line-height:1.5}
+.tb-tag{font-size:10px;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.tag-foi{background:#1a3a2a;color:#52B788}
+.tag-dev{background:#1a1a3a;color:#8B9FE8}
+.tag-ang{background:#2a1a2a;color:#C084D8}
+.tag-bur{background:#2a2a1a;color:#E8D5A3}
+.tag-soi{background:#2a1a1a;color:#C97B84}
+
+.habit-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--border)}
+.habit-item:last-child{border-bottom:none}
+.habit-check{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .2s;background:transparent;user-select:none}
+.habit-check.done{background:#52B788;border-color:#52B788}
+.habit-check.done::after{content:'✓';font-size:11px;color:white;font-weight:700}
+.habit-label{font-size:13px;color:var(--text);flex:1;line-height:1.4}
+.habit-label.done{text-decoration:line-through;color:var(--muted)}
+
+.progress-row{margin-bottom:14px}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;color:var(--muted)}
+.progress-bar{height:4px;background:var(--surface3);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;transition:width .5s ease}
+
+.month-tab-row{display:flex;gap:6px;margin-bottom:14px}
+.m-tab{flex:1;padding:8px;border:0.5px solid var(--border);border-radius:8px;font-size:12px;
+  cursor:pointer;text-align:center;background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif}
+.m-tab.active{background:var(--gold);color:var(--dark);font-weight:500;border-color:var(--gold)}
+.m-panel{display:none}
+.m-panel.open{display:block}
+.m-item{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border);
+  font-size:13px;color:var(--text);line-height:1.5;align-items:flex-start}
+.m-item:last-child{border-bottom:none}
+.m-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+
+.rule-row{display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--border);align-items:flex-start}
+.rule-row:last-child{border-bottom:none}
+.rule-icon{font-size:16px;width:24px;flex-shrink:0}
+.rule-text{font-size:13px;color:var(--text);line-height:1.5}
+
+.journal-area{width:100%;background:var(--surface2);border:0.5px solid var(--border);
+  border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;
+  font-size:13px;resize:none;min-height:120px;line-height:1.6;margin-bottom:10px}
+.journal-area:focus{outline:none;border-color:var(--gold)}
+.journal-area::placeholder{color:var(--muted)}
+.save-btn{background:var(--gold);color:var(--dark);border:none;padding:9px 20px;
+  border-radius:20px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500}
+.save-btn:active{opacity:.85}
+.save-btn:hover{opacity:.9}
+.journal-entry{background:var(--surface2);border-left:2px solid var(--gold);
+  padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:8px}
+.entry-date{font-size:11px;color:var(--muted);margin-bottom:4px}
+.entry-text{font-size:13px;color:var(--text);line-height:1.6}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.stat-card{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--gold);font-weight:600}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+
+.quote-box{background:var(--surface);border:0.5px solid var(--gold);border-radius:12px;
+  padding:16px;margin-bottom:10px;text-align:center}
+.quote-text{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-light);
+  font-style:italic;line-height:1.7}
+.quote-src{font-size:11px;color:var(--muted);margin-top:8px}
+
+input[type=range]{width:100%;accent-color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-name">Kajatah</div>
+        <div class="hero-sub">Mon espace de croissance</div>
+      </div>
+      <div class="hero-date" id="hero-date"></div>
+    </div>
+    <div class="ayah">
+      <div class="ayah-text">"Allah n'impose à une âme que ce qu'elle peut supporter."</div>
+      <div class="ayah-ref">Sourate Al-Baqarah, 2:286</div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="showPage('today',this)">Aujourd'hui</button>
+    <button class="nav-btn" onclick="showPage('habits',this)">Habitudes</button>
+    <button class="nav-btn" onclick="showPage('plan',this)">Plan 3 mois</button>
+    <button class="nav-btn" onclick="showPage('progress',this)">Progrès</button>
+    <button class="nav-btn" onclick="showPage('journal',this)">Journal</button>
+    <button class="nav-btn" onclick="showPage('regles',this)">Règles</button>
+  </div>
+
+  <!-- AUJOURD'HUI -->
+  <div id="today" class="page active">
+    <div class="sec-title">Planning du jour</div>
+    <div class="card">
+      <div class="time-block"><span class="tb-time">05h00</span><span class="tb-act">Fajr + Coran 15 min + intention du jour<span class="tb-tag tag-foi">foi</span></span></div>
+      <div class="time-block"><span class="tb-time">06h00</span><span class="tb-act">Anglais — vocabulaire + Duolingo 20 min<span class="tb-tag tag-ang">anglais</span></span></div>
+      <div class="time-block"><span class="tb-time">07h30</span><span class="tb-act">Petit déjeuner + Doha<span class="tb-tag tag-foi">foi</span></span></div>
+      <div class="time-block"><span class="tb-time">08h00</span><span class="tb-act">Développement web — freeCodeCamp 2h<span class="tb-tag tag-dev">dev</span></span></div>
+      <div class="time-block"><span class="tb-time">10h15</span><span class="tb-act">Dev — projet pratique ou correction<span class="tb-tag tag-dev">dev</span></span></div>
+      <div class="time-block"><span class="tb-time">12h00</span><span class="tb-act">Dhuhr + déjeuner + repos<span class="tb-tag tag-foi">foi</span></span></div>
+      <div class="time-block"><span class="tb-time">13h00</span><span class="tb-act">Connaissance islamique — lecture / vidéo savants<span class="tb-tag tag-foi">foi</span></span></div>
+      <div class="time-block"><span class="tb-time">14h30</span><span class="tb-act">Excel / Word / Bureautique<span class="tb-tag tag-bur">bureautique</span></span></div>
+      <div class="time-block"><span class="tb-time">16h00</span><span class="tb-act">Asr + temps libre calme (pas de réseaux)<span class="tb-tag tag-foi">foi</span></span></div>
+      <div class="time-block"><span class="tb-time">16h30</span><span class="tb-act">Anglais approfondi — podcast / série VO<span class="tb-tag tag-ang">anglais</span></span></div>
+      <div class="time-block"><span class="tb-time">18h30</span><span class="tb-act">Cours d'anglais — Cité Keur Gorgui (lun/mer/sam)<span class="tb-tag tag-ang">anglais</span></span></div>
+      <div class="time-block"><span class="tb-time">20h00</span><span class="tb-act">Maghrib + Isha + dîner en famille<span class="tb-tag tag-foi">foi</span></span></div>
+      <div class="time-block"><span class="tb-time">21h00</span><span class="tb-act">Bilan du jour dans le cahier<span class="tb-tag tag-soi">soi</span></span></div>
+      <div class="time-block"><span class="tb-time">22h00</span><span class="tb-act">📵 Téléphone posé — Coran ou lecture jusqu'au sommeil</span></div>
+    </div>
+  </div>
+
+  <!-- HABITUDES -->
+  <div id="habits" class="page">
+    <div class="sec-title">Mes habitudes du jour</div>
+    <div class="card" id="habit-list"></div>
+    <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:12px;color:var(--muted)" id="habit-count">0 / 10 complétées</span>
+      <button onclick="resetHabits()" style="background:transparent;border:0.5px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">Réinitialiser</button>
+    </div>
+  </div>
+
+  <!-- PLAN 3 MOIS -->
+  <div id="plan" class="page">
+    <div class="sec-title">Plan sur 3 mois</div>
+    <div class="month-tab-row">
+      <button class="m-tab active" onclick="showMonth('pm1',this)">Mois 1</button>
+      <button class="m-tab" onclick="showMonth('pm2',this)">Mois 2</button>
+      <button class="m-tab" onclick="showMonth('pm3',this)">Mois 3</button>
+    </div>
+    <div id="pm1" class="m-panel open">
+      <div class="card-sm" style="margin-bottom:12px">
+        <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold)">Reconstruction — La fondation</span><br>
+        <span style="font-size:12px;color:var(--muted)">Reconstruire les habitudes une par une</span>
+      </div>
+      <div class="card">
+        <div class="m-item"><div class="m-dot" style="background:#52B788"></div><span>Foi : reprendre Fajr et Maghrib/Isha. Pas de pression sur le reste au début.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#8B9FE8"></div><span>Dev : freeCodeCamp HTML complet + CSS bases. 2h par jour maximum.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C084D8"></div><span>Anglais : cours + Duolingo 20 min + 5 mots nouveaux chaque matin.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C9A84C"></div><span>Bureautique : Word — mise en page, styles, tableaux. 1h30 par jour.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C97B84"></div><span>Règle clé : téléphone posé à 22h chaque soir sans exception.</span></div>
+      </div>
+    </div>
+    <div id="pm2" class="m-panel">
+      <div class="card-sm" style="margin-bottom:12px">
+        <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold)">Momentum — La montée en puissance</span><br>
+        <span style="font-size:12px;color:var(--muted)">Monter en niveau dans chaque domaine</span>
+      </div>
+      <div class="card">
+        <div class="m-item"><div class="m-dot" style="background:#52B788"></div><span>Foi : Coran 15 min après Fajr. Commencer à étudier la Sira du Prophète ﷺ.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#8B9FE8"></div><span>Dev : Flexbox + Grid + Responsive. Refaire la page Collé Sow Ardo en responsive.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C084D8"></div><span>Anglais : vidéos tech sous-titrées. Écrire un paragraphe en anglais par jour.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C9A84C"></div><span>Bureautique : Excel — formules de base, tableaux, graphiques simples.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C97B84"></div><span>Soi : journal quotidien 10 min le soir — ce que tu as appris, tes objectifs.</span></div>
+      </div>
+    </div>
+    <div id="pm3" class="m-panel">
+      <div class="card-sm" style="margin-bottom:12px">
+        <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold)">Consolidation — La récolte</span><br>
+        <span style="font-size:12px;color:var(--muted)">Produire des résultats concrets visibles</span>
+      </div>
+      <div class="card">
+        <div class="m-item"><div class="m-dot" style="background:#52B788"></div><span>Foi : essayer le Tahajjud 2-3 fois/semaine. Mémoriser une sourate courte.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#8B9FE8"></div><span>Dev : formulaires + CV complet en ligne sur GitHub Pages. Certif freeCodeCamp.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C084D8"></div><span>Anglais : tenir une conversation simple. Série VO sans sous-titres 15 min/jour.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C9A84C"></div><span>Bureautique : Excel avancé + PowerPoint. Une présentation professionnelle complète.</span></div>
+        <div class="m-item"><div class="m-dot" style="background:#C97B84"></div><span>Bilan : comparer qui tu étais au mois 1 et qui tu es maintenant. C'est ta preuve.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRÈS -->
+  <div id="progress" class="page">
+    <div class="sec-title">Mes progrès</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="streak-num">0</div><div class="stat-label">Jours de suite</div></div>
+      <div class="stat-card"><div class="stat-num" id="total-days">0</div><div class="stat-label">Jours complétés</div></div>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:14px">Progression par domaine</div>
+      <div class="progress-row"><div class="progress-label"><span>Foi & Prières</span><span id="p-foi">0%</span></div><div class="progress-bar"><div class="progress-fill" id="pb-foi" style="width:0%;background:#52B788"></div></div></div>
+      <div class="progress-row"><div class="progress-label"><span>Développement web</span><span id="p-dev">0%</span></div><div class="progress-bar"><div class="progress-fill" id="pb-dev" style="width:0%;background:#8B9FE8"></div></div></div>
+      <div class="progress-row"><div class="progress-label"><span>Anglais</span><span id="p-ang">0%</span></div><div class="progress-bar"><div class="progress-fill" id="pb-ang" style="width:0%;background:#C084D8"></div></div></div>
+      <div class="progress-row"><div class="progress-label"><span>Bureautique</span><span id="p-bur">0%</span></div><div class="progress-bar"><div class="progress-fill" id="pb-bur" style="width:0%;background:#C9A84C"></div></div></div>
+      <div class="progress-row" style="margin-bottom:0"><div class="progress-label"><span>Discipline perso</span><span id="p-soi">0%</span></div><div class="progress-bar"><div class="progress-fill" id="pb-soi" style="width:0%;background:#C97B84"></div></div></div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:12px">Mettre à jour mes progrès</div>
+      <div id="prog-sliders"></div>
+      <button onclick="saveProgress()" class="save-btn" style="margin-top:12px;width:100%">Enregistrer</button>
+    </div>
+  </div>
+
+  <!-- JOURNAL -->
+  <div id="journal" class="page">
+    <div class="sec-title">Mon journal</div>
+    <div class="card">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;font-style:italic">3 choses apprises aujourd'hui, 1 chose à améliorer demain...</div>
+      <textarea class="journal-area" id="journal-input" placeholder="Écris ici..."></textarea>
+      <button class="save-btn" onclick="saveJournal()">Enregistrer l'entrée</button>
+    </div>
+    <div id="journal-entries" style="margin-top:16px"></div>
+  </div>
+
+  <!-- RÈGLES -->
+  <div id="regles" class="page">
+    <div class="sec-title">Mes règles de vie</div>
+    <div class="quote-box">
+      <div class="quote-text">"Cherche la connaissance du berceau jusqu'à la tombe."</div>
+      <div class="quote-src">Hadith du Prophète ﷺ</div>
+    </div>
+    <div class="card">
+      <div class="rule-row"><span class="rule-icon">📵</span><div class="rule-text">Téléphone posé à 22h chaque soir. Pas de négociation. C'est la règle mère de tout le reste.</div></div>
+      <div class="rule-row"><span class="rule-icon">🌙</span><div class="rule-text">Fajr chaque matin. Si tu rates, tu ne rates jamais deux jours de suite.</div></div>
+      <div class="rule-row"><span class="rule-icon">💗</span><div class="rule-text">Commence chaque journée avec une intention claire. Dis ce que tu veux accomplir à Allah.</div></div>
+      <div class="rule-row"><span class="rule-icon">📱</span><div class="rule-text">Réseaux sociaux uniquement de 16h à 16h30. Pas le matin, jamais la nuit.</div></div>
+      <div class="rule-row"><span class="rule-icon">📓</span><div class="rule-text">Un cahier physique sur ta table de nuit. Chaque soir : 3 choses apprises, 1 chose à améliorer.</div></div>
+      <div class="rule-row"><span class="rule-icon">🔄</span><div class="rule-text">Si tu rates une journée, pas de culpabilité. Recommence le lendemain avec le sourire.</div></div>
+      <div class="rule-row"><span class="rule-icon">💻</span><div class="rule-text">Ne passe jamais à la leçon suivante sans avoir fait le projet de la leçon en cours.</div></div>
+      <div class="rule-row"><span class="rule-icon">🤲</span><div class="rule-text">La connaissance est une ibada. Apprendre le dev, l'anglais, Excel — c'est aussi de l'adoration si tu le fais avec la bonne niyya.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const habits=[
+  {id:'h1',label:'Fajr prié',cat:'foi',color:'tag-foi'},
+  {id:'h2',label:'Coran 15 min',cat:'foi',color:'tag-foi'},
+  {id:'h3',label:'Duolingo 20 min',cat:'anglais',color:'tag-ang'},
+  {id:'h4',label:'5 mots anglais appris',cat:'anglais',color:'tag-ang'},
+  {id:'h5',label:'freeCodeCamp 1h minimum',cat:'dev',color:'tag-dev'},
+  {id:'h6',label:'Projet dev pratiqué',cat:'dev',color:'tag-dev'},
+  {id:'h7',label:'Bureautique 1h',cat:'bureautique',color:'tag-bur'},
+  {id:'h8',label:'Lecture islamique',cat:'foi',color:'tag-foi'},
+  {id:'h9',label:'Journal du soir écrit',cat:'soi',color:'tag-soi'},
+  {id:'h10',label:'Téléphone posé à 22h',cat:'soi',color:'tag-soi'},
+];
+const domaines=[
+  {id:'foi',label:'Foi & Prières',bar:'pb-foi',pct:'p-foi'},
+  {id:'dev',label:'Dev web',bar:'pb-dev',pct:'p-dev'},
+  {id:'ang',label:'Anglais',bar:'pb-ang',pct:'p-ang'},
+  {id:'bur',label:'Bureautique',bar:'pb-bur',pct:'p-bur'},
+  {id:'soi',label:'Discipline',bar:'pb-soi',pct:'p-soi'},
+];
+let state={habits:{},progress:{foi:0,dev:0,ang:0,bur:0,soi:0},journal:[],streak:0,totalDays:0,lastDate:''};
+
+function loadState(){
+  try{const s=localStorage.getItem('kajatah_state');if(s)state=JSON.parse(s);}catch(e){}
+}
+function saveState(){
+  try{localStorage.setItem('kajatah_state',JSON.stringify(state));}catch(e){}
+}
+
+function renderHabits(){
+  const list=document.getElementById('habit-list');
+  let done=0;
+  list.innerHTML=habits.map(h=>{
+    const checked=!!state.habits[h.id];
+    if(checked)done++;
+    return`<div class="habit-item">
+      <div class="habit-check ${checked?'done':''}" onclick="toggleHabit('${h.id}')"></div>
+      <span class="habit-label ${checked?'done':''}">${h.label}</span>
+      <span class="tb-tag ${h.color}">${h.cat}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('habit-count').textContent=done+' / '+habits.length+' complétées';
+}
+
+function toggleHabit(id){
+  state.habits[id]=!state.habits[id];
+  const allDone=habits.every(h=>state.habits[h.id]);
+  if(allDone){
+    const today=new Date().toDateString();
+    if(state.lastDate!==today){state.totalDays++;state.streak++;state.lastDate=today;}
+  }
+  saveState();renderHabits();updateStats();
+}
+
+function resetHabits(){state.habits={};saveState();renderHabits();}
+
+function updateStats(){
+  document.getElementById('streak-num').textContent=state.streak;
+  document.getElementById('total-days').textContent=state.totalDays;
+  domaines.forEach(d=>{
+    const v=state.progress[d.id]||0;
+    document.getElementById(d.bar).style.width=v+'%';
+    document.getElementById(d.pct).textContent=v+'%';
+  });
+}
+
+function renderSliders(){
+  const c=document.getElementById('prog-sliders');
+  c.innerHTML=domaines.map(d=>`
+    <div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px">
+        <span>${d.label}</span><span id="sv-${d.id}">${state.progress[d.id]||0}%</span>
+      </div>
+      <input type="range" min="0" max="100" step="1" value="${state.progress[d.id]||0}"
+        oninput="document.getElementById('sv-${d.id}').textContent=this.value+'%';state.progress['${d.id}']=parseInt(this.value)">
+    </div>`).join('');
+}
+
+function saveProgress(){saveState();updateStats();alert('Progrès enregistrés ✓');}
+
+function saveJournal(){
+  const t=document.getElementById('journal-input').value.trim();
+  if(!t)return;
+  const now=new Date();
+  const days=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const months=['jan','fév','mar','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+  const d=days[now.getDay()]+' '+now.getDate()+' '+months[now.getMonth()]+' à '+now.getHours()+'h'+String(now.getMinutes()).padStart(2,'0');
+  state.journal.unshift({date:d,text:t});
+  if(state.journal.length>30)state.journal.pop();
+  document.getElementById('journal-input').value='';
+  saveState();renderJournal();
+}
+
+function renderJournal(){
+  const c=document.getElementById('journal-entries');
+  if(!state.journal.length){
+    c.innerHTML='<div style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Pas encore d\'entrées. Écris ta première ! 🌿</div>';
+    return;
+  }
+  c.innerHTML=state.journal.map(e=>`
+    <div class="journal-entry">
+      <div class="entry-date">${e.date}</div>
+      <div class="entry-text">${e.text.replace(/\n/g,'<br>')}</div>
+    </div>`).join('');
+}
+
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showMonth(id,btn){
+  document.querySelectorAll('.m-panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.m-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('open');
+  btn.classList.add('active');
+}
+
+const days2=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const months2=['jan','fév','mar','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+const now=new Date();
+document.getElementById('hero-date').innerHTML=days2[now.getDay()]+'<br>'+now.getDate()+' '+months2[now.getMonth()]+' '+now.getFullYear();
+
+loadState();renderHabits();updateStats();renderSliders();renderJournal();
+</script>
+</body>
+</html>
